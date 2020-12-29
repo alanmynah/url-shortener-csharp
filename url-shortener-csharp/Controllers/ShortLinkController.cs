@@ -28,6 +28,9 @@ namespace url_shortener_csharp.Controllers
             {
                 link = new ShortLink(linkRequest.Slug, linkRequest.Destination);
             } 
+            
+            // save to db
+            
             return Ok(link);
         }
     }
