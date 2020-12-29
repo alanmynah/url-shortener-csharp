@@ -15,10 +15,19 @@ namespace url_shortener_csharp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] ShortLink shortLink) // no DTO, because what for? too simple of an example
+        public IActionResult Post([FromBody] ShortLinkRequest linkRequest) // no DTO, because what for? too simple of an example
         {
             _logger.LogInformation("Creating new short URL");
-            var link = new ShortLink(shortLink.Slug, shortLink.Destination);
+            ShortLink link;
+            if (linkRequest.Slug is null)
+            {
+                var randomSlug = ShortLink.GenerateRandomSlug();
+                link = new ShortLink(randomSlug, linkRequest.Destination);
+            }
+            else
+            {
+                link = new ShortLink(linkRequest.Slug, linkRequest.Destination);
+            } 
             return Ok(link);
         }
     }
