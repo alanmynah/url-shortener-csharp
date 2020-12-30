@@ -5,6 +5,11 @@ namespace url_shortener_csharp
 {
     public class ShortLink
     {
+        
+        public ShortLink()
+        {
+        }
+        
         public ShortLink(string slug, string destination)
         {
             Slug = slug;
