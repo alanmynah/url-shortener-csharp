@@ -32,9 +32,9 @@ namespace url_shortener_csharp.Controllers
         public async Task<IActionResult> Get(int id)
         {
             // bear with me, yes, awful, i know
-            var note = await _db.ShortLinks.FirstOrDefaultAsync(sl => sl.Id == id);
+            var link = await _db.ShortLinks.FirstOrDefaultAsync(sl => sl.Id == id);
 
-            return Ok(note);
+            return Ok(link);
         }
 
         
