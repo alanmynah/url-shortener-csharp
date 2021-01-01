@@ -25,14 +25,9 @@ namespace url_shortener_csharp
                         Slug = "abc",
                         Destination = "https://google.com"
                     },
-
                     new ShortLink
                     {
                         Slug = "123",
-                        Destination = "https://google.com"
-                    },
-                    new ShortLink
-                    {
                         Destination = "https://google.com"
                     },
                     new ShortLink

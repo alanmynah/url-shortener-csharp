@@ -32,7 +32,7 @@ namespace url_shortener_csharp
                 {
                     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
-                    logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+                    logger.LogError(ex, "An error occurred while migrating the database.");
 
                     throw;
                 }
