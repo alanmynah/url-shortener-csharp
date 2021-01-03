@@ -49,10 +49,7 @@ namespace url_shortener_csharp.Controllers
         public async Task<IActionResult> Post([FromBody] ShortLinkRequest linkRequest) // no DTO, because what for? too simple of an example
         {
             _logger.LogInformation("Creating new short URL");
-
-            if (linkRequest.Destination is null)
-                return BadRequest("All links require destination");
-
+            
             ShortLink link;
             if (linkRequest.Slug is null)
             {

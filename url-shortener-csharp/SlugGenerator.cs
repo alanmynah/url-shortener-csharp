@@ -50,7 +50,7 @@ namespace url_shortener_csharp
             string slug;
             while (true)
             {
-                var newId = _currentRandomSlugId++; // this causes first request to be really slow as it catches up with taken slugs
+                var newId = _currentRandomSlugId++; // this causes first requests to be really slow as it catches up with taken slugs
                 // so each new instance would hammer db, until caught up
                 // how would i try to do it better? 
                 // get it from redis or some other state? 

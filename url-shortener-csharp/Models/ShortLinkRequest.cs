@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace url_shortener_csharp
 {
@@ -9,8 +10,9 @@ namespace url_shortener_csharp
             Slug = slug;
             Destination = destination;
         }
-
+        
         public string Slug { get; }
+        [Required]
         public string Destination  { get; }
     }
 }
