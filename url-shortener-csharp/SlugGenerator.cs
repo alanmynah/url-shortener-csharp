@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -33,9 +34,7 @@ namespace url_shortener_csharp
     // but will allow special chars to be used in custom links
     public static class SlugGenerator
     {
-        private static long _currentRandomSlugId = 0; // yes, keeping this in memory is daft. manyana, manyana...
-        // if server drops, will have to catch up with the random id. how to have this value synched with multiple instances, etc. 
-        // for now it's only one, so will see how it goes. 
+        private static long _currentRandomSlugId;
         private const string Base62Alphanum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
         public static async Task<string> GenerateRandomSlug(AppDbContext db)
@@ -48,12 +47,22 @@ namespace url_shortener_csharp
             //
             // will use base conversion and keep a track on the highest id
             string slug;
+
+            if (_currentRandomSlugId == 0)
+            {
+                // trying to circumvent catching up of the newed up api instance
+                // should happen once per api instance, then they can just try until no collisions 
+                // still not super distributed, because there is a potential for one instance to time out as it always 
+                // hits collisions as other instances are just faster. 
+                Console.WriteLine("Current slug id is 0, retrieving last item, if any");
+                var lastLink = await db.ShortLinks.OrderBy(sl => sl.Id).LastOrDefaultAsync();
+                if (lastLink is null) _currentRandomSlugId = 0;
+                _currentRandomSlugId = lastLink!.Id; 
+            }
+            
             while (true)
             {
-                var newId = _currentRandomSlugId++; // this causes first requests to be really slow as it catches up with taken slugs
-                // so each new instance would hammer db, until caught up
-                // how would i try to do it better? 
-                // get it from redis or some other state? 
+                var newId = _currentRandomSlugId++; 
 
                 slug = Base64UrlEncoder.Encode(newId.ToString());
 
@@ -64,9 +73,7 @@ namespace url_shortener_csharp
                 {
                     break;
                 }
-                Console.WriteLine($"Slug id {_currentRandomSlugId} with encoded value {slug} was taken, catching up...");
-                // ^^ so this is what happens with keeping state in memory. Once caught up it works better than re-roll, but 
-                // need to solve for the costly initial catch-up
+                Console.WriteLine($"Slug id {_currentRandomSlugId} with encoded value {slug} was taken, trying another one");
             }
             Console.WriteLine($"Current random slug ID is {_currentRandomSlugId}");
             return slug;
