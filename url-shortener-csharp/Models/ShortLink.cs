@@ -24,10 +24,5 @@ namespace url_shortener_csharp
 
         [Required]
         public string Destination  { get; set; }
-
-        public static string GenerateRandomSlug()
-        {
-            return "123";
-        }
     }
 }

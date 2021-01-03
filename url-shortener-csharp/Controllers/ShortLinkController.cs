@@ -56,13 +56,22 @@ namespace url_shortener_csharp.Controllers
             ShortLink link;
             if (linkRequest.Slug is null)
             {
-                var randomSlug = ShortLink.GenerateRandomSlug();
+                var randomSlug = await SlugGenerator.GenerateRandomSlug(_db);
                 link = new ShortLink(randomSlug, linkRequest.Destination);
             }
             else
             {
-                // not checking for slug collision just yet
-                link = new ShortLink(linkRequest.Slug, linkRequest.Destination);
+                var isSlugTaken = await _db.ShortLinks.AnyAsync(sl => sl.Slug == linkRequest.Slug);
+                if (!isSlugTaken)
+                {
+                    link = new ShortLink(linkRequest.Slug, linkRequest.Destination);
+
+                }
+                else
+                {
+                    return BadRequest($"Custom slug with value '{linkRequest.Slug}' is taken, please provide a different one");
+                }
+                    
             }
 
             // save to db
