@@ -8,6 +8,10 @@ services:
       - SA_PASSWORD=Password1-VerySecure&
     ports:
       - 1433:1433
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
 
   # dockersqlserver:
   #   image: ${DOCKER_REGISTRY-}dockersqlserver

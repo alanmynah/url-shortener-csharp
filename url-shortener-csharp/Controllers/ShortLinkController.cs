@@ -1,7 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.ComponentModel;
+using System.Text;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace url_shortener_csharp.Controllers
 {
@@ -11,13 +17,16 @@ namespace url_shortener_csharp.Controllers
     {
         private readonly ILogger<ShortLinkController> _logger;
         private readonly AppDbContext _db; // yep, just here in the controller.
-                                            // i have heard of repositories and units of work, yes, but again,
-                                            // let's keep it simple
+        // i have heard of repositories and units of work, yes, but again,
+        // let's keep it simple
+        private readonly IDistributedCache _cache;
+        
 
-        public ShortLinkController(ILogger<ShortLinkController> logger, AppDbContext db)
+        public ShortLinkController(ILogger<ShortLinkController> logger, AppDbContext db, IDistributedCache cache)
         {
             _logger = logger;
             _db = db;
+            _cache = cache;
         }
 
         // this one isn't going to age well if we have a lot of links
@@ -32,7 +41,29 @@ namespace url_shortener_csharp.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
+            _logger.LogInformation($"Checking cache for link with id {id}"); // yes this syntax isn't quite right for rolling up logs, i know, but i'm the only one using it, and it's right there in the console.
+            
+            var cachedLinkEntry = await _cache.GetAsync(id.ToString());
+            if (cachedLinkEntry is not null)
+            {
+                _logger.LogInformation("Found cached entry, returning from cache");
+
+                var serialisedLink = Encoding.UTF8.GetString(cachedLinkEntry);
+                var cachedShortLink = JsonConvert.DeserializeObject<ShortLink>(serialisedLink);
+                return Ok(cachedShortLink);
+            }
+            
+            _logger.LogInformation("Didn't find cached entry, returning from DB");
+
             var link = await _db.ShortLinks.FirstOrDefaultAsync(sl => sl.Id == id);
+           
+            var linkToCache = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(link));
+            var options = new DistributedCacheEntryOptions()
+                .SetSlidingExpiration(TimeSpan.FromMinutes(5))
+                .SetAbsoluteExpiration(DateTime.Now.AddHours(6));
+
+            _logger.LogInformation("Adding to cache for next time");
+            await _cache.SetAsync(id.ToString(), linkToCache, options);
 
             return Ok(link);
         }
