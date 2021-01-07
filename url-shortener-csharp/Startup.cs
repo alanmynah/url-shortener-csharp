@@ -29,7 +29,7 @@ namespace url_shortener_csharp
             });
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "url_shortener_csharp", Version = "v1"});
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "url_shortener_csharp", Version = "v1"}); // not a fan of this
             });
         }
 
