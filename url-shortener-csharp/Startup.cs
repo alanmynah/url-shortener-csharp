@@ -23,10 +23,7 @@ namespace url_shortener_csharp
             services.AddControllers();
             services.AddDbContext<AppDbContext>(options => options
                 .UseSqlServer(Configuration.GetConnectionString("AppDbContext")));
-            services.AddStackExchangeRedisCache(o =>
-            {
-                o.Configuration = Configuration.GetConnectionString("Redis");
-            });
+            services.AddRedis(Configuration.GetConnectionString("Redis"));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "url_shortener_csharp", Version = "v1"}); // not a fan of this
