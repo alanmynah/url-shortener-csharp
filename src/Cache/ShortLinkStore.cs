@@ -8,6 +8,8 @@ using Newtonsoft.Json;
 
 namespace url_shortener_csharp
 {
+    // pretty basic, but a link to more for reference
+    // https://nickcraver.com/blog/2019/08/06/stack-overflow-how-we-do-app-caching/
     public interface IShortLinkCache
     { 
         Task CacheLink(ShortLink link);

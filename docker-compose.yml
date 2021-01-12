@@ -12,11 +12,11 @@ services:
     image: redis
     ports:
       - 6379:6379
-
-  # dockersqlserver:
+  # api:
   #   image: ${DOCKER_REGISTRY-}dockersqlserver
   #   build:
   #     context: .
   #     dockerfile: DockerSqlServer/Dockerfile
   #   depends_on:
   #     - db
+  #     - redis

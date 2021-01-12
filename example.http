@@ -1,12 +1,12 @@
 # Examples to call the API with. Install VS Code's REST Client and hit send
 
-@localhost = http://localhost:5000
+@localhost = https://localhost:5001
 
 ###
 GET {{localhost}}/shortlink HTTP/1.1
 
 ###
-GET {{localhost}}/shortlink/1 HTTP/1.1
+GET {{localhost}}/shortlink/57 HTTP/1.1
 
 ###
 # with slug
@@ -37,14 +37,14 @@ Content-Type: application/json; charset=utf-8
 }
 
 ###
-GET {{localhost}}/check/slug HTTP/1.1
+GET {{localhost}}/check/fdafdfdas HTTP/1.1
 
 ###
 GET {{localhost}}/check/123 HTTP/1.1
 
 ###
 # should not go anywhere as this slug doesnt exist
-GET {{localhost}}/redirect/slug HTTP/1.1
+GET {{localhost}}/redirect/slug123 HTTP/1.1
 
 ###
 # should get google.com

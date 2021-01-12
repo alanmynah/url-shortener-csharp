@@ -1,4 +1,5 @@
 # url-shortener-csharp
+
 Sample URL Shortener written in C#.
 
 This is a toy project to simply go from 0 and some spec to AWS prod using C# ecosystem.
@@ -26,5 +27,5 @@ Never tried from scratch myself, but i imagine
 git clone this-repo
 cd /to/this/proj
 docker-compose up --build
-dotnet run -p url-shortener-csharp/url-shortener-csharp.csproj
+# it now runs, head to example.http file and make some calls
 ```
