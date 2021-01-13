@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -20,11 +21,17 @@ namespace url_shortener_csharp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var sqlConnection = Environment.GetEnvironmentVariable("AppDbContext")
+                                ?? Configuration.GetConnectionString("AppDbContext")
+                                ?? throw new InvalidOperationException("Couldn't find SQL Server connection env string");
+            var redisConnection = Environment.GetEnvironmentVariable("Redis")
+                                  ?? Configuration.GetConnectionString("Redis")
+                                  ?? throw new InvalidOperationException("Couldn't find Redis connection env string");
+            
             services.AddControllers();
 
-            services.AddDbContext<AppDbContext>(options => options
-                .UseSqlServer(Configuration.GetConnectionString("AppDbContext")));
-            services.AddRedis(Configuration.GetConnectionString("Redis"));
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(sqlConnection));
+            services.AddRedis(redisConnection);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "url_shortener_csharp", Version = "v1"}); // not a fan of this
@@ -32,7 +39,7 @@ namespace url_shortener_csharp
 
             services.AddHealthChecks()
                 .AddDbContextCheck<AppDbContext>()
-                .AddRedis(Configuration.GetConnectionString("Redis"));
+                .AddRedis(redisConnection);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

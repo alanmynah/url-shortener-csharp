@@ -16,13 +16,19 @@ services:
     build:
       context: ./src
       dockerfile: ./Dockerfile
-    # networks:
-    #   - default
     image: alanmynah/url-shortener-csharp
     depends_on:
       - db
       - redis
-
-# networks:
-#   default:
-#     name: url-shortener-csharp-network
+    env_file:
+      .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    ports:
+      - "5000:80"
+      - "5001:443"
+    volumes:
+      - ~/.aspnet/https:/https:ro

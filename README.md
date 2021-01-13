@@ -21,11 +21,26 @@ I used mac + rider
 
 ## Installation
 
-Never tried from scratch myself, but i imagine
+Never tried from scratch myself, but i imagine:
+
+- clone:
 
 ```sh
 git clone this-repo
 cd /to/this/proj
+```
+
+- copy-paste `.env.example` to `.env` file for local dev.
+
+- and run:
+
+```sh
 docker-compose up --build
 # it now runs, head to example.http file and make some calls
+```
+
+If you want to run just dependencies via docker and the API locally, run:
+
+```sh
+docker-compose -f docker-compose.yml -f docker-compose.local.yml up --build
 ```

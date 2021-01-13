@@ -3,10 +3,13 @@
 @localhost = https://localhost:5001
 
 ###
+GET {{localhost}}/healthcheck HTTP/1.1
+
+###
 GET {{localhost}}/shortlink HTTP/1.1
 
 ###
-GET {{localhost}}/shortlink/57 HTTP/1.1
+GET {{localhost}}/shortlink/2 HTTP/1.1
 
 ###
 # with slug
