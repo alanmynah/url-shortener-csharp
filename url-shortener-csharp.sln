@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "url-shortener-csharp", "url-shortener-csharp\url-shortener-csharp.csproj", "{955CA6FC-1B7A-4206-B342-83B116068148}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "url-shortener-csharp", "src\url-shortener-csharp.csproj", "{955CA6FC-1B7A-4206-B342-83B116068148}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
