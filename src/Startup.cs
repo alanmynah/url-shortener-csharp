@@ -21,6 +21,7 @@ namespace url_shortener_csharp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
             services.AddDbContext<AppDbContext>(options => options
                 .UseSqlServer(Configuration.GetConnectionString("AppDbContext")));
             services.AddRedis(Configuration.GetConnectionString("Redis"));
@@ -28,6 +29,10 @@ namespace url_shortener_csharp
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "url_shortener_csharp", Version = "v1"}); // not a fan of this
             });
+
+            services.AddHealthChecks()
+                .AddDbContextCheck<AppDbContext>()
+                .AddRedis(Configuration.GetConnectionString("Redis"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,7 +51,11 @@ namespace url_shortener_csharp
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHealthChecks("/healthcheck");
+            });
         }
     }
 }

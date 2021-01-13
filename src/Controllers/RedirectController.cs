@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 // todo:
-// - healthcheck
 // - get unit of work in
 // - write exception middleware
 // - easiest way to deploy?
