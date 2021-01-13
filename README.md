@@ -39,7 +39,7 @@ docker-compose up --build
 # it now runs, head to example.http file and make some calls
 ```
 
-If you want to run just dependencies via docker and the API locally, run:
+If you want to run just dependencies via docker and the API separately in VS or Rider, run:
 
 ```sh
 docker-compose -f docker-compose.yml -f docker-compose.local.yml up --build
