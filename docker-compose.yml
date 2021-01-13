@@ -12,11 +12,17 @@ services:
     image: redis
     ports:
       - 6379:6379
-  # api:
-  #   image: ${DOCKER_REGISTRY-}dockersqlserver
-  #   build:
-  #     context: .
-  #     dockerfile: DockerSqlServer/Dockerfile
-  #   depends_on:
-  #     - db
-  #     - redis
+  api:
+    build:
+      context: ./src
+      dockerfile: ./Dockerfile
+    # networks:
+    #   - default
+    image: alanmynah/url-shortener-csharp
+    depends_on:
+      - db
+      - redis
+
+# networks:
+#   default:
+#     name: url-shortener-csharp-network

@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 // todo:
+// - healthcheck
 // - get unit of work in
 // - write exception middleware
-// - dockerize the api
-// - easiest way to deploy? 
+// - easiest way to deploy?
 
 namespace url_shortener_csharp.Controllers
 {
@@ -25,7 +25,7 @@ namespace url_shortener_csharp.Controllers
             _db = db;
             _cache = cache;
         }
-        
+
         [HttpGet("{slug}")]
         public async Task<IActionResult> Get(string slug)
         {
@@ -34,7 +34,7 @@ namespace url_shortener_csharp.Controllers
             var cachedLink =  await _cache.TryGetCachedLink(slug);
             if (cachedLink is not null)
                 return Ok(cachedLink);
-            
+
             var link = await _db.ShortLinks.FirstOrDefaultAsync(sl => sl.Slug == slug);
             if (link is not null)
             {
